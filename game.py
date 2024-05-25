@@ -92,7 +92,7 @@ class Game:
         if self.ball_y + BALL_RADIUS > WINDOW_HEIGHT:
             self.lives -= 1
             self.ball_x, self.ball_y = WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2
-            self.ball_x_velocity, self.ball_y_velocity = BALL_X_VELOCITY, BALL_Y_VELOCITY
+            self.ball_x_velocity, self.ball_y_velocity = BALL_X_VELOCITY + 1, BALL_Y_VELOCITY + 1
             if self.lives <= 0:
                 self.running = False
 
