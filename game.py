@@ -2,6 +2,10 @@ from config import *
 import pygame
 from pygame.locals import *
 
+sound_boing = pygame.mixer.Sound('./boing.wav')
+sound_boing.set_volume(0.4)
+
+
 class Game:
     def __init__(self) -> None:
         pygame.init()
@@ -11,22 +15,18 @@ class Game:
         self.surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         self.background = background  # Use the background loaded in config.py
         self.timer = pygame.time.Clock()
-        
         # Paddle properties
         self.paddle_x = (WINDOW_WIDTH - PADDLE_WIDTH) // 2
         self.paddle_y = WINDOW_HEIGHT - PADDLE_HEIGHT - 10  # 10 pixels from bottom
         self.paddle_speed = 10
-        
         # Ball properties
         self.ball_x = WINDOW_WIDTH // 2
         self.ball_y = WINDOW_HEIGHT // 2
         self.ball_x_velocity = BALL_X_VELOCITY
         self.ball_y_velocity = BALL_Y_VELOCITY
-
         # Lives and font
         self.lives = 5
         self.font = pygame.font.Font(None, 36)  # Use default font
-
         # Blocks
         self.blocks = self.create_blocks()
 
@@ -68,26 +68,26 @@ class Game:
     def move_ball(self):
         self.ball_x += self.ball_x_velocity
         self.ball_y += self.ball_y_velocity
-
         # Ball collision with left and right walls
         if self.ball_x - BALL_RADIUS < 0 or self.ball_x + BALL_RADIUS > WINDOW_WIDTH:
             self.ball_x_velocity = -self.ball_x_velocity
-
+            sound_boing.play()
         # Ball collision with top wall
         if self.ball_y - BALL_RADIUS < 0:
             self.ball_y_velocity = -self.ball_y_velocity
-
+            sound_boing.play()
         # Ball collision with paddle
         if (self.paddle_y < self.ball_y + BALL_RADIUS < self.paddle_y + PADDLE_HEIGHT and
-            self.paddle_x < self.ball_x < self.paddle_x + PADDLE_WIDTH):
+                self.paddle_x < self.ball_x < self.paddle_x + PADDLE_WIDTH):
             self.ball_y_velocity = -self.ball_y_velocity
-
+            sound_boing.play()
         # Ball collision with blocks
         for block in self.blocks[:]:
-            if block.colliderect(pygame.Rect(self.ball_x - BALL_RADIUS, self.ball_y - BALL_RADIUS, BALL_RADIUS * 2, BALL_RADIUS * 2)):
+            if block.colliderect(pygame.Rect(self.ball_x - BALL_RADIUS, self.ball_y - BALL_RADIUS, BALL_RADIUS * 2,
+                                             BALL_RADIUS * 2)):
                 self.blocks.remove(block)
                 self.ball_y_velocity = -self.ball_y_velocity
-
+                sound_boing.play()
         # Ball goes out of bottom
         if self.ball_y + BALL_RADIUS > WINDOW_HEIGHT:
             self.lives -= 1
@@ -104,20 +104,17 @@ class Game:
                 if event.type == KEYDOWN:
                     if event.key == K_UP:
                         print("The up key has been pressed down")
-
             self.handle_input()
             self.move_ball()
-
             self.surface.blit(self.background, (0, 0))  # Draw the background image
             self.draw_paddle()  # Draw the paddle
             self.draw_ball()  # Draw the ball
             self.draw_lives()  # Draw the lives
             self.draw_blocks()  # Draw the blocks
-
             pygame.display.update()
-            self.timer.tick(60)  # Cap the frame rate to 60 FPS
-
+            self.timer.tick(60) 
         pygame.quit()
+
 
 if __name__ == "__main__":
     game = Game()
