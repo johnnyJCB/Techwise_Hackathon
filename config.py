@@ -30,6 +30,6 @@ BALL_RADIUS = 10
 BALL_Y_VELOCITY = 3.0
 BALL_X_VELOCITY = 1.0
 
-# Initialize Pygame and load background image
+# Initialize Pygame + load background image
 pygame.init()
 background = pygame.image.load('background.png')

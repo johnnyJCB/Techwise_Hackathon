@@ -77,10 +77,18 @@ class Game:
             self.ball_y_velocity = -self.ball_y_velocity
             sound_boing.play()
         # Ball collision with paddle
+        paddle_center = (self.paddle_x + PADDLE_WIDTH // 2)
         if (self.paddle_y < self.ball_y + BALL_RADIUS < self.paddle_y + PADDLE_HEIGHT and
                 self.paddle_x < self.ball_x < self.paddle_x + PADDLE_WIDTH):
+            if abs(self.ball_x - paddle_center) > PADDLE_WIDTH // 4:
+                if self.ball_x < paddle_center:
+                    self.ball_x_velocity = -abs(self.ball_x_velocity)
+                else:
+                    self.ball_x_velocity = abs(self.ball_x_velocity)
+
             self.ball_y_velocity = -self.ball_y_velocity
             sound_boing.play()
+    
         # Ball collision with blocks
         for block in self.blocks[:]:
             if block.colliderect(pygame.Rect(self.ball_x - BALL_RADIUS, self.ball_y - BALL_RADIUS, BALL_RADIUS * 2,
